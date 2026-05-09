@@ -3,10 +3,24 @@ import java.util.*;
 public class Board {
     private final int size;
     private final Symbol[][] grid;
+    private final int winCellCount;
 
     public Board(int size) {
         this.size = size;
         this.grid = new Symbol[size][size];
+        this.winCellCount = 5;
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                grid[i][j] = Symbol.EMPTY;
+            }
+        }
+    }
+
+    public Board(int size, int winCellCount) {
+        this.size = size;
+        this.grid = new Symbol[size][size];
+        this.winCellCount = winCellCount;
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -39,51 +53,63 @@ public class Board {
     }
 
     public boolean checkWin(Symbol symbol) {
+        int cellCount;
+
         for (int i = 0; i < size; i++) {
-            boolean win = true;
+            cellCount = 0;
             for (int j = 0; j < size; j++) {
-                if (grid[i][j] != symbol) {
-                    win = false;
-                    break;
-                }
-            }
-            if (win) {
-                return true;
+                cellCount = grid[i][j] == symbol ? cellCount + 1 : 0;
+                if (cellCount == winCellCount)
+                    return true;
             }
         }
 
         for (int j = 0; j < size; j++) {
-            boolean win = true;
+            cellCount = 0;
             for (int i = 0; i < size; i++) {
-                if (grid[i][j] != symbol) {
-                    win = false;
-                    break;
-                }
-            }
-            if (win) {
-                return true;
+                cellCount = grid[i][j] == symbol ? cellCount + 1 : 0;
+                if (cellCount == winCellCount)
+                    return true;
             }
         }
 
-        boolean diag = true;
-        for (int i = 0; i < size; i++) {
-            if (grid[i][i] != symbol) {
-                diag = false;
-                break;
+        for (int c = 0; c <= size - winCellCount; c++) {
+            cellCount = 0;
+            for (int i = 0, j = c; i < size && j < size; i++, j++) {
+                cellCount = grid[i][j] == symbol ? cellCount + 1 : 0;
+                if (cellCount == winCellCount)
+                    return true;
             }
-        }
-        if (diag) {
-            return true;
         }
 
-        diag = true;
-        for (int i = 0; i < size; i++) {
-            if (grid[i][size - i - 1] != symbol) {
-                diag = false;
-                break;
+        for (int r = 1; r <= size - winCellCount; r++) {
+            cellCount = 0;
+            for (int i = r, j = 0; i < size && j < size; i++, j++) {
+                cellCount = grid[i][j] == symbol ? cellCount + 1 : 0;
+                if (cellCount == winCellCount)
+                    return true;
             }
         }
-        return diag;
+
+        for (int c = winCellCount - 1; c < size; c++) {
+            cellCount = 0;
+            for (int i = 0, j = c; i < size && j >= 0; i++, j--) {
+                cellCount = grid[i][j] == symbol ? cellCount + 1 : 0;
+                if (cellCount == winCellCount)
+                    return true;
+            }
+        }
+
+        for (int r = 1; r <= size - winCellCount; r++) {
+            cellCount = 0;
+            for (int i = r, j = size - 1; i < size && j >= 0; i++, j--) {
+                cellCount = grid[i][j] == symbol ? cellCount + 1 : 0;
+                if (cellCount == winCellCount)
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean isFull() {
@@ -96,6 +122,10 @@ public class Board {
 
     public Symbol[][] getGrid() {
         return grid;
+    }
+
+    public int getWinCellCount() {
+        return winCellCount;
     }
 
     private int rowOf(int position) {

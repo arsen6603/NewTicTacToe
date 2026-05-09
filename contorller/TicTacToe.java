@@ -29,7 +29,7 @@ public class TicTacToe {
             Symbol[] symbols = { p1.getSymbol(), p2.getSymbol() };
 
             while (true) {
-                GameEngine engine = new GameEngine(3, symbols);
+                GameEngine engine = new GameEngine(15, symbols, 5);
                 ConsoleUI.render(engine.getBoard());
 
                 MoveResult moveResult = MoveResult.CONTINUE;

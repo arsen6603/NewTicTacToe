@@ -3,8 +3,8 @@ public class GameEngine {
     private final Symbol[] players;
     private int currentPlayer = 0;
 
-    public GameEngine(int size, Symbol[] players) {
-        this.board = new Board(size);
+    public GameEngine(int size, Symbol[] players, int winCellCount) {
+        this.board = new Board(size, winCellCount);
         this.players = players;
     }
 
